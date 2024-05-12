@@ -3,6 +3,7 @@ import useAxios from "../utils/useAxios";
 import OvalAvatar from "./OvalAvator";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import DatatableEmployee from "./Datatable/main";
 function DatatableProjects({ projects, teammembers, users, activities }) {
   const [allmembers, setAllmembers] = useState([]);
   const api = useAxios();
@@ -94,19 +95,33 @@ function DatatableProjects({ projects, teammembers, users, activities }) {
                       <small> {project.description}</small>
                     </td>
                     <td>
-                      <ul className="list-inline">
+                      <ul style={{ listStyleType: "none", padding: 0 }}>
                         {teammembers
                           .filter((member) => member.team.id === project.team)
-                          .map((member) => (
-                            <li key={member.id}>
-                              <div>
+                          .map((member, index) => (
+                            <li
+                              key={member.id}
+                              style={{
+                                display: "inline-block",
+                                marginRight: "10px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                {" "}
+                                {/* Add flexbox style to align items horizontally */}
                                 <OvalAvatar
                                   firstName={member.user.first_name}
                                   fatherName={member.user.middle_name}
+                                  style={{ marginRight: "5px" }} // Add margin to create space between avatars
                                 />
                                 {/* <div>
-                                  {member.user.full_name} {}
-                                </div> */}
+            {member.user.full_name} {}
+          </div> */}
                               </div>
                             </li>
                           ))}

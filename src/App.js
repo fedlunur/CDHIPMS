@@ -18,6 +18,10 @@ import ProjectListDT from "./views/ProjectsListDT";
 import DashboardLTE from "./components/DashboardLTE";
 import ProjectsDashboard from "./components/ProjectsDashboard";
 import ActivityBoardList from "./components/Activity/ActivityBoardList";
+import timetableindex from "./components/TimeTable /TimetableIndex";
+import TimetableIndex from "./components/TimeTable /TimetableIndex";
+import TaskDatatable from "./components/Activity/TaskDatatable";
+import Taskdetail from "./components/Activity/TaskDetail/Taskdetail";
 function App() {
   return (
     <Router>
@@ -60,6 +64,7 @@ function App() {
             exact
           />
 
+          <Route component={Taskdetail} path="/taskdt" exact />
           {/*Working task list  */}
         </Switch>
       </AuthProvider>

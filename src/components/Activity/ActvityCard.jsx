@@ -15,7 +15,7 @@ export default function ActivityCard({ allusers, teammebers, projects }) {
   // const teammebers = location.state && location.state.teammebers;
   // const users = location.state && location.state.users;
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       try {
         const activitiesResponse = await api.get("/activitylist/");
         setActivities(activitiesResponse.data);
@@ -25,7 +25,7 @@ export default function ActivityCard({ allusers, teammebers, projects }) {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    };
+    }
 
     fetchData();
   }, []);
@@ -37,7 +37,7 @@ export default function ActivityCard({ allusers, teammebers, projects }) {
 
     const taskId = parseInt(draggableId);
     const updatedTask = tasks.find((task) => task.id === taskId);
-
+    console.log("Draggable task id is " + taskId);
     try {
       // Update task activity via API
       const response = await api.put(`/tasklist/${taskId}/`, {
@@ -77,21 +77,22 @@ export default function ActivityCard({ allusers, teammebers, projects }) {
             margin: "0 auto",
           }}
         >
-          {activities.map((activity) => {
-            const tasksForActivity = tasks.filter(
-              (task) => task.activity === activity.id
-            );
-            return (
-              <Column
-                key={activity.id}
-                title={activity.list_title}
-                allusers={allusers}
-                teammeber={teammebers}
-                incomingTasks={tasksForActivity}
-                id={activity.id.toString()}
-              />
-            );
-          })}
+          {activities.length > 0 &&
+            activities.map((activity) => {
+              const tasksForActivity = tasks.filter(
+                (task) => task.activity === activity.id
+              );
+              return (
+                <Column
+                  key={activity.id}
+                  title={activity.list_title}
+                  allusers={allusers}
+                  teammeber={teammebers}
+                  incomingTasks={tasksForActivity}
+                  id={activity.id.toString()}
+                />
+              );
+            })}
         </div>
       </DragDropContext>
     </div>

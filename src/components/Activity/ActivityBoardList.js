@@ -9,9 +9,7 @@ export default function ActivityBoardList() {
   const teammebers = location.state && location.state.teammebers;
   const users = location.state && location.state.users;
   const activities = location.state && location.state.activities;
-  console.log(
-    "%%%%%%%%%%%%%%%Users From Activity Board is location accessed" + users
-  );
+
   const card_bacground_tiltle = [
     "card-secondary",
     "card-info",

@@ -74,14 +74,20 @@ export default function Menu() {
 
               <li className="nav-header">Tasks</li>
               <li className="nav-item">
-                <a href="pages/calendar.html" className="nav-link">
-                  <i className="nav-icon far fa-calendar-alt" />
-                  <p>Calendar</p>
-                </a>
-                <a href="pages/calendar.html" className="nav-link">
-                  <i className="nav-icon far fa-calendar-alt" />
-                  <p>Assigned tasks</p>
-                </a>
+                <Link to="/timetable" className="nav-link">
+                  <i className="nav-icon far fa-calendar-alt " />
+                  <p>
+                    Time Table
+                    <i className="right fas fa-angle-left" />
+                  </p>
+                </Link>
+                <Link to="/taskdt" className="nav-link">
+                  <i className="nav-icon fas fa-chart-pie" />
+                  <p>
+                    Tasks
+                    <i className="right fas fa-calendar-alt " />
+                  </p>
+                </Link>
               </li>
               <li className="nav-header">Teams</li>
               <li className="nav-item">
