@@ -118,7 +118,7 @@ export default function PieChartDemo() {
             filter
             showClear={true}
             placeholder="Select Project"
-            className="border text-xs py-1 px-2 rounded-md w-[100px]"
+            className="border text-xs py-1 px-2 rounded-md w-[200px]"
           />
           {/* <Select
             placeholder="Select a person"

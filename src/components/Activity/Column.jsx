@@ -101,6 +101,7 @@ export default function Column({
   teammeber,
   incomingTasks,
   id,
+  onDeleteActivity
 }) {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState([]);
@@ -252,28 +253,24 @@ export default function Column({
 
     const now = new Date();
     const due = new Date(dueDate);
-    const diff = due - now;
+
+    // Calculate the difference in time
+    const diff = due.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0);
+
+    // Calculate the difference in days
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
     if (days < 0) return { text: "Passed", color: "text-red-400 bg-red-50" };
     if (days === 0)
       return { text: "Due today", color: "text-orange-400 bg-orange-50" };
     if (days === 1)
-      return {
-        text: "1 day left",
-        color: "text-orange-400 bg-orange-50",
-      };
+      return { text: "1 day left", color: "text-orange-400 bg-orange-50" };
     if (days === 2)
-      return {
-        text: "2 days left",
-        color: "text-orange-400 bg-orange-50",
-      };
+      return { text: "2 days left", color: "text-orange-400 bg-orange-50" };
 
-    return {
-      text: `${days} days left`,
-      color: "text-gray-400 bg-gray-50",
-    };
+    return { text: `${days} days left`, color: "text-gray-400 bg-gray-50" };
   }
+
   const handleMenuClick = (e, task) => {
     const functions = {
       1: () => handleOpen(task, taskmembers),
@@ -445,7 +442,11 @@ export default function Column({
         >
           <h3 className="text-sm text-left text-white">{title}</h3>
         </div>
+        <div className="flex mx-4">
+
         <p className="text-sm text-right px-3 text-blue-500">{tasks.length}</p>
+        <DeleteOutlined className="cursor-pointer text-blue-500" onClick={() => onDeleteActivity(id)}/>
+        </div>
       </div>
       <div className="bg-transparent px-1 overflow-y-scroll h-[600px] w-full">
         <MyFormDialog

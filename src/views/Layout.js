@@ -12,7 +12,7 @@ function Layout({ children }) {
       </div>
       <div className="flex-1 flex flex-col">
         <Header className="bg-white p-4 shadow" />
-        <main className="flex-1  p-5 overflow-y-auto">
+        <main className="flex-1 bg-blue-50  p-5 overflow-y-auto">
           {children}
         </main>
         {/* <Footer /> */}

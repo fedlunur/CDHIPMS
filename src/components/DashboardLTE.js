@@ -19,18 +19,19 @@ import PieChart from "./Reports/PieGraph";
 import BarGraph from "./Reports/BarGraph";
 import PieGraph from "./Reports/PieGraph";
 import ProjectDashboardCard from "./ProjectDashboardCard";
+import TasksBar from "./Reports/TasksBar";
 export default function DashboardLTE() {
-  const {alltasks} = DataService();
+  const { alltasks } = DataService();
 
   const [projects, setProjects] = useState([]);
   const [completedProjects, setCompletedprojects] = useState([]);
   const [activities, setActivities] = useState([]);
   const [members, setMembers] = useState([]);
   const [users, setUsers] = useState([]);
+  const [issueData, setIssueData] = useState([]);
   const [completedActivities, setCompletedActivities] = useState([]);
   const api = useAxios();
   const history = useHistory();
-  
 
   useEffect(() => {
     fetchData();
@@ -43,11 +44,13 @@ export default function DashboardLTE() {
         activitiesResponse,
         memberResponse,
         userResponse,
+        issueResponse,
       ] = await Promise.all([
         api.get("/project/"),
         api.get("/activitylist/"),
         api.get("/teammembers/"),
         api.get("/users/"),
+        api.get("/issues/"),
       ]);
 
       if (projectsResponse.status < 200 || projectsResponse.status >= 300) {
@@ -58,14 +61,18 @@ export default function DashboardLTE() {
       const activitiesData = activitiesResponse.data;
       const membersData = memberResponse.data;
       const usersData = userResponse.data;
+      const issueData = issueResponse.data;
 
       console.log(
         "actvities data are found  ===> yes" + activitiesResponse.data.length
       );
+
+      console.log("issues on home ", issueData);
       setProjects(projectsData);
       setActivities(activitiesData);
       setMembers(membersData);
       setUsers(usersData);
+      setIssueData(issueData);
 
       const completedActivities = activitiesData.filter(
         (activity) => activity.status === "completed"
@@ -83,6 +90,7 @@ export default function DashboardLTE() {
       activities: actvivitydata,
     });
   };
+
   return (
     <Layout>
       <div className="">
@@ -280,11 +288,19 @@ export default function DashboardLTE() {
                   {/* <HorizontalBarDemo /> */}
                 </Col>
                 <Col span={6}>
-                  {/* <ProjectDashboardCard /> */}
-                  <PieChartDemo />
+                  <ProjectDashboardCard />
                 </Col>
                 <Col span={6}></Col>
               </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <TasksBar />
+                </Col>
+                <Col span={12}>
+                  <PieChartDemo />
+                </Col>
+              </Row>
+
               {/* <PieChart /> */}
               {/* <ProjectStatusChart finished={8} inProgress={2} pending={10} /> */}
             </div>

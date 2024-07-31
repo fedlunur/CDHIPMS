@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import CustomMultiselect from "./MultiSelect";
+import { Button, Modal, Select, Divider, DatePicker } from "antd";
 import { ChromePicker } from "react-color";
 import useAxios from "../../utils/useAxios";
-import Checklist from "./Checklist";
-
-import ReactDatePicker from "react-datepicker";
-import { Divider, Modal, Select } from "antd";
+import CustomMultiselect from "./MultiSelect";
+import moment from "moment";
 
 function MyFormDialog({
   open,
@@ -21,28 +14,14 @@ function MyFormDialog({
   handleTaskUpdate,
 }) {
   const api = useAxios();
-  const [startDate, setStartDate] = useState(null);
   const [selectedValues, setSelectedValues] = useState([]);
   const [cover, setCover] = useState("");
-  const [assignedmember, setAssignedMember] = useState([]);
   const [formData, setFormData] = useState({
-    task_name: selectedTask ? selectedTask.task_name : "",
-    status: selectedTask ? selectedTask.status : "",
-    due_date: selectedTask ? selectedTask.due_date : null,
-    cover: selectedTask ? selectedTask.cover : null,
+    task_name: "",
+    status: "",
+    due_date: null,
+    cover: "",
   });
-
-  const handleChangeColor = (newColor) => {
-    setCover(newColor.hex);
-  };
-
-  const handleDateChange = (date) => {
-    setStartDate(date);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      due_date: date,
-    }));
-  };
 
   useEffect(() => {
     if (selectedTask) {
@@ -50,21 +29,33 @@ function MyFormDialog({
         task_name: selectedTask.task_name,
         status: selectedTask.status,
         cover: selectedTask.cover,
-        due_date: selectedTask.due_date
-          ? new Date(selectedTask.due_date)
-          : null,
+        due_date: selectedTask.due_date ? moment(selectedTask.due_date) : null,
       });
-
-      setStartDate(
-        selectedTask.due_date ? new Date(selectedTask.due_date) : null
-      );
     }
   }, [selectedTask]);
+
+  const handleChangeColor = (newColor) => {
+    setCover(newColor.hex);
+  };
+
+  const handleDateChange = (date) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      due_date: date,
+    }));
+  };
+
+  const handleChange = (value, name) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async () => {
     try {
       const formattedDueDate = formData.due_date
-        ? formData.due_date.toISOString().split("T")[0]
+        ? formData.due_date.format("YYYY-MM-DD")
         : null;
 
       const response = await api.patch(
@@ -90,14 +81,6 @@ function MyFormDialog({
     } catch (error) {
       console.error("Error:", error);
     }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
   };
 
   const onSelect = async (selectedList, selectedItem) => {
@@ -137,93 +120,57 @@ function MyFormDialog({
       onOk={handleSubmit}
       onCancel={handleClose}
     >
-      <Divider/>
+      <Divider />
       <div style={{ maxHeight: "550px", overflowY: "auto" }}>
-        <div className="">
-          <div className="">
-            <div className="">
-              <div className="">
-                <div className="flex flex-col">
-                  <label>Status</label>
-                  <Select
-                    // style={{
-                    //   width: ,
-                    //   height:40
-                    // }}
-                    className="w-full"
-                    size="large"
-                    value={formData.status}
-                    onChange={(e) => handleChange(e)}
-                    options={[
-                      {
-                        value: "0",
-                        label: "Normal",
-                      },
-                      {
-                        value: "1",
-                        label: "Low",
-                      },
-                      {
-                        value: "2",
-                        label: "High",
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
-              
-            </div>
+        <div>
+          <div className="flex flex-col mb-4">
+            <label>Status</label>
+            <Select
+              className="w-full"
+              size="large"
+              value={formData.status}
+              onChange={(value) => handleChange(value, "status")}
+              options={[
+                { value: "0", label: "Normal" },
+                { value: "1", label: "Low" },
+                { value: "2", label: "High" },
+              ]}
+            />
+          </div>
 
-            {/* <div className="">
-              <div className="">
-                <div className="">
-                  <label>Check List </label>
-                  <Checklist task={selectedTask} />
-                </div>
-              </div>
-            </div> */}
+          <div className="flex flex-col mb-4">
+            <label>Assign Task To</label>
+            <CustomMultiselect
+              options={
+                allusers
+                  ? allusers.map((user) => ({
+                      value: user.id,
+                      label: user.first_name || "",
+                    }))
+                  : []
+              }
+              selectedValues={
+                assignedtaskmembers
+                  ? assignedtaskmembers.map((user) => ({
+                      value: user.assigned_to_id,
+                      label: user.assigned_to_first_name || "",
+                    }))
+                  : []
+              }
+              onSelect={onSelect}
+              onRemove={onRemove}
+              displayValue="label"
+            />
+          </div>
 
-            <div className="row">
-              <div className="col-12">
-                <div className="form-group">
-                  <label>Assign Task To</label>
-                  <CustomMultiselect
-                    options={
-                      allusers
-                        ? allusers.map((user) => ({
-                            value: user.id,
-                            label: user.first_name || "",
-                          }))
-                        : []
-                    }
-                    selectedValues={
-                      assignedtaskmembers
-                        ? assignedtaskmembers.map((user) => ({
-                            value: user.assigned_to_id,
-                            label: user.assigned_to_first_name || "",
-                          }))
-                        : []
-                    }
-                    onSelect={onSelect}
-                    onRemove={onRemove}
-                    displayValue="label"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-12">
-                <label>Due Date</label>
-                <div className="card flex justify-content-center">
-                  <ReactDatePicker
-                    selected={startDate}
-                    onChange={handleDateChange}
-                    dateFormat="yyyy/MM/dd"
-                  />
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-col mb-4">
+            <label>Due Date</label>
+            <DatePicker
+              value={formData.due_date}
+              onChange={handleDateChange}
+              format="YYYY-MM-DD"
+              className="w-full"
+            />
           </div>
         </div>
       </div>
