@@ -27,7 +27,7 @@ function DatatableProjects({
     const members = teammembers.filter(
       (member) => member.team.id === rowData.id
     );
-  
+
     return members.length > 0 ? (
       <Avatar.Group
         max={{
@@ -57,25 +57,28 @@ function DatatableProjects({
       <span>No Team Members</span>
     );
   };
-  
-  const totalTaskTemplate = ( rowData ) => {
-  
-    console.log("For the project  ======> ",rowData)
-      // Filter activities based on project association (assuming 'project_id' is the property on activity)
-      const activityList = activities.filter((activity) => activity.project_name === rowData.id);
-    console.log("The actvities List => ",activityList)
-      // Filter tasks based on activity association (assuming 'activity_id' is the property on task)
-      const tasklist= tasks.filter((task) => activityList.some((activity) => activity.id === task.activity));
-      console.log("The taks  List => ",tasklist)
-      // Calculate the total number of tasks (assuming tasks is an array)
-      const taskCount = tasklist.length;
-    
-      return (
-        <div style={{ display: "flex", gap: "8px" }}>
-          {taskCount}  {/* Display the total task count */}
-        </div>
-      );
-    };
+
+  const totalTaskTemplate = (rowData) => {
+    console.log("For the project  ======> ", rowData);
+    // Filter activities based on project association (assuming 'project_id' is the property on activity)
+    const activityList = activities.filter(
+      (activity) => activity.project_name === rowData.id
+    );
+    console.log("The actvities List => ", activityList);
+    // Filter tasks based on activity association (assuming 'activity_id' is the property on task)
+    const tasklist = tasks.filter((task) =>
+      activityList.some((activity) => activity.id === task.activity)
+    );
+    console.log("The taks  List => ", tasklist);
+    // Calculate the total number of tasks (assuming tasks is an array)
+    const taskCount = tasklist.length;
+
+    return (
+      <div style={{ display: "flex", gap: "8px" }}>
+        {taskCount} {/* Display the total task count */}
+      </div>
+    );
+  };
 
   const fetchTasksForProject = (projectId) => {
     return tasks.filter((task) =>
@@ -101,11 +104,11 @@ function DatatableProjects({
       (p) => p.projectId === projectId
     )?.tasks;
 
-    const doneTasks = projectTasks?.filter(
-      (task) =>
-        activities.find(
-          (activity) => activity.id === task.activity && activity.list_title === "Done"
-        )
+    const doneTasks = projectTasks?.filter((task) =>
+      activities.find(
+        (activity) =>
+          activity.id === task.activity && activity.list_title === "Done"
+      )
     ).length;
 
     return projectTasks?.length > 0

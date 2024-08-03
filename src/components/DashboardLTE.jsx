@@ -17,6 +17,7 @@ import { RiTeamFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
 import PieChart from "./Reports/PieGraph";
 import BarGraph from "./Reports/BarGraph";
+import GanttChart from "./Reports/GanttChart";
 import PieGraph from "./Reports/PieGraph";
 import ProjectDashboardCard from "./ProjectDashboardCard";
 import TasksBar from "./Reports/TasksBar";
@@ -300,7 +301,11 @@ export default function DashboardLTE() {
                   <PieChartDemo />
                 </Col>
               </Row>
-
+              <Row gutter={16}>
+                <Col span={24}>
+                  <GanttChart />
+                </Col>
+              </Row>
               {/* <PieChart /> */}
               {/* <ProjectStatusChart finished={8} inProgress={2} pending={10} /> */}
             </div>

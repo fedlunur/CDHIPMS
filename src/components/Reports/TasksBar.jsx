@@ -46,7 +46,7 @@ export default function TasksBar() {
   return (
     <BarChart
       className='w-full'
-      height={500}
+      height={550}
       series={[
         { data: counts, label: 'Issues', id: 'issuesId',color: '#1d4ed8' },
       ]}
